@@ -1,12 +1,12 @@
 :root {
     --bg-light: #f4f7fa;
-    --bg-dark: #1e1e2f;
+    --bg-dark: white;
     --primary:#231f39;
-    --secondary: #6366f1;
+    --secondary: black;
     --text-light: #FFFFFF;
     --text-dark: #FFFFFF;
     --border: black;
-    --accent: #3774d4;
+    --accent: red;
     --transition: 0.3s ease;
     button{ 
         background-color: black;
