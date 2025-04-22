@@ -3,11 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crusher Flow</title>
+    <title>Crusher flow</title>
     <link rel="stylesheet" href="css/styles.css">
-    <head>
-     <link rel="icon" href="logo.png" type="image/png">
-    <meta name="description" content="Create, edit and save flowcharts offline with this browser-based tool">
 </head>
 <body>
     <div class="app-container">
@@ -33,7 +30,7 @@
         <div class="main-content">
             <aside class="sidebar">
                 <div class="node-palette">
-                    <h3>Nodes</h3>
+                    <h2>Nodes</h2>
                     <div class="node-item" draggable="true" data-node-type="start">
                         <div class="node-preview start-node"></div>
                         <span>Start</span>
@@ -57,14 +54,14 @@
                 </div>
                 
                 <div class="tools">
-                    <h3>Tools</h3>
+                    <h2>Tools</h2>
                     <button id="connectBtn" class="btn tool-btn" title="Connect Nodes">Connect</button>
                     <button id="selectBtn" class="btn tool-btn active" title="Select">Select</button>
                     <button id="deleteBtn" class="btn tool-btn" title="Delete">Delete</button>
                 </div>
 
                 <div class="properties-panel" id="propertiesPanel">
-                    <h3>Properties</h3>
+                    <h2>Properties</h2>
                     <div id="nodeProperties" class="hidden">
                         <div class="form-group">
                             <label for="nodeText">Text:</label>
@@ -104,6 +101,7 @@
                 <span class="close">&times;</span>
                 <h2>Load Flowchart</h2>
                 <div id="savedFlowcharts" class="saved-flowcharts">
+                    
                 </div>
             </div>
         </div>
