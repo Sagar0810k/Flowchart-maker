@@ -1,7 +1,3 @@
-/**
- * NodeTypes - Defines different types of flowchart nodes
- * Each node type has specific rendering and interaction behavior
- */
 const NodeTypes = {
     // Start node (oval shape)
     start: {
