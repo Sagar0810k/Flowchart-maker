@@ -3,19 +3,247 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#4a6cf7">
   <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icons/favicon.ico" type="image/x-icon">
   <link rel="stylesheet" href="css/style.css">
-  <title>Flowchart Maker</title>
+  <title>Simple Flowchart Maker</title>
 </head>
 <body>
-  <div id="canvas"></div>
-  <script src="js/app.js"></script>
-  <script src="js/graph.js"></script>
-  <script src="js/render.js"></script>
-  <script src="js/drag.js"></script>
-  <script src="js/connect.js"></script>
-  <script src="js/simulate.js"></script>
-  <script src="js/storage.js"></script>
-  <script src="js/utils.js"></script>
+  <div class="app-container">
+    <header class="app-header">
+      <div class="logo">
+        <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none">
+          <path d="M8 18L12 22L16 18"></path>
+          <path d="M12 2V22"></path>
+          <path d="M4 8L8 4L12 8"></path>
+          <path d="M16 8L20 4L24 8"></path>
+        </svg>
+        <h1>Simple Flowchart Maker</h1>
+      </div>
+      <div class="toolbar">
+        <button id="save-jpeg" class="btn">Save as JPEG</button>
+        <button id="load-btn" class="btn" title="Load">
+          <svg class="icon" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+          Load
+        </button>
+        <button id="export-btn" class="btn" title="Export as PNG">
+          <svg class="icon" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+          Export
+        </button>
+        <button id="undo-btn" class="btn" title="Undo" disabled>
+          <svg class="icon" viewBox="0 0 24 24"><path d="M3 10h10a5 5 0 0 1 5 5v4"></path><path d="M9 6L3 10 9 14"></path></svg>
+        </button>
+        <button id="redo-btn" class="btn" title="Redo" disabled>
+          <svg class="icon" viewBox="0 0 24 24"><path d="M21 10H11a5 5 0 0 0-5 5v4"></path><path d="M15 6l6 4-6 4"></path></svg>
+        </button>
+        <button id="clear-canvas" class="btn btn-danger" title="Clear Canvas">
+          <svg class="icon" viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+          Clear
+        </button>
+      </div>
+    </header>
+
+    <div class="workspace">
+      <div class="sidebar">
+        <div class="shapes-panel">
+          <h3>Shapes</h3>
+          <div class="shape-items">
+            <div class="shape-item" data-shape="rectangle">
+              <svg viewBox="0 0 100 60"><rect x="5" y="5" width="90" height="50" rx="2" ry="2" class="shape-preview"></rect></svg>
+              <span>Rectangle</span>
+            </div>
+            <div class="shape-item" data-shape="rounded">
+              <svg viewBox="0 0 100 60"><rect x="5" y="5" width="90" height="50" rx="10" ry="10" class="shape-preview"></rect></svg>
+              <span>Rounded</span>
+            </div>
+            <div class="shape-item" data-shape="diamond">
+              <svg viewBox="0 0 100 60"><polygon points="50,5 95,30 50,55 5,30" class="shape-preview"></polygon></svg>
+              <span>Diamond</span>
+            </div>
+            <div class="shape-item" data-shape="circle">
+              <svg viewBox="0 0 100 60"><ellipse cx="50" cy="30" rx="45" ry="25" class="shape-preview"></ellipse></svg>
+              <span>Ellipse</span>
+            </div>
+            <div class="shape-item" data-shape="terminal">
+              <svg viewBox="0 0 100 60"><rect x="5" y="5" width="90" height="50" rx="20" ry="20" class="shape-preview"></rect></svg>
+              <span>Terminal</span>
+            </div>
+            <div class="shape-item" data-shape="parallelogram">
+              <svg viewBox="0 0 100 60"><polygon points="20,5 95,5 80,55 5,55" class="shape-preview"></polygon></svg>
+              <span>Parallelogram</span>
+            </div>
+             <div class="shape-item" data-shape="arrow">
+              <svg viewBox="0 0 100 60"><line x1="10" y1="30" x2="90" y2="30" stroke="black" stroke-width="3" marker-end="url(#arrowhead)" /></svg>
+              <span>Arrow</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="properties-panel">
+          <h3>Properties</h3>
+          <div id="node-properties" class="hidden">
+            <div class="property-row">
+              <label for="node-text">Text:</label>
+              <input type="text" id="node-text" placeholder="Node text">
+            </div>
+            <div class="property-row">
+              <label for="fill-color">Fill:</label>
+              <input type="color" id="fill-color" value="#ffffff">
+            </div>
+            <div class="property-row">
+              <label for="stroke-color">Stroke:</label>
+              <input type="color" id="stroke-color" value="#000000">
+            </div>
+            <div class="property-row">
+              <label for="text-color">Text:</label>
+              <input type="color" id="text-color" value="#000000">
+            </div>
+          </div>
+          <div id="edge-properties" class="hidden">
+            <div class="property-row">
+              <label for="edge-type">Edge Type:</label>
+              <select id="edge-type">
+                <option value="straight">Straight</option>
+                <option value="curved">Curved</option>
+                <option value="orthogonal">Orthogonal</option>
+              </select>
+            </div>
+            <div class="property-row">
+              <label for="arrow-type">Arrow:</label>
+              <select id="arrow-type">
+                <option value="none">None</option>
+                <option value="forward" selected>Forward</option>
+                <option value="backward">Backward</option>
+                <option value="both">Both</option>
+              </select>
+            </div>
+            <div class="property-row">
+              <label for="edge-color">Color:</label>
+              <input type="color" id="edge-color" value="#000000">
+            </div>
+          </div>
+          <div id="no-selection-message">
+            <p>Select an item to edit properties</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="canvas-container">
+        <div class="zoom-controls">
+          <button id="zoom-in" class="zoom-btn">+</button>
+          <span id="zoom-level">100%</span>
+          <button id="zoom-out" class="zoom-btn">-</button>
+          <button id="zoom-reset" class="zoom-btn">Reset</button>
+        </div>
+        <div id="canvas-wrapper">
+          <canvas id="flowchart-canvas"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div id="context-menu" class="context-menu">
+      <ul>
+        <li data-action="edit">Edit</li>
+        <li data-action="duplicate">Duplicate</li>
+        <li data-action="delete">Delete</li>
+        <li data-action="bring-front">Bring to Front</li>
+        <li data-action="send-back">Send to Back</li>
+      </ul>
+    </div>
+
+    <div id="status-bar" class="status-bar">
+      <div id="position-indicator"></div>
+      <div id="selection-info"></div>
+      <div id="scale-indicator">Scale: 100%</div>
+    </div>
+
+    <div id="modal-overlay" class="modal-overlay hidden">
+      <div id="save-modal" class="modal hidden">
+        <div class="modal-header">
+          <h3>Save Flowchart</h3>
+          <button class="close-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <label for="save-name">Name:</label>
+          <input type="text" id="save-name" placeholder="My Flowchart">
+          <div class="saved-list">
+            <h4>Saved Flowcharts</h4>
+            <ul id="saved-flowcharts"></ul>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button id="save-confirm" class="btn btn-primary">Save</button>
+          <button class="btn close-modal">Cancel</button>
+        </div>
+      </div>
+      
+      <div id="load-modal" class="modal hidden">
+        <div class="modal-header">
+          <h3>Load Flowchart</h3>
+          <button class="close-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="saved-list">
+            <h4>Saved Flowcharts</h4>
+            <ul id="load-flowcharts"></ul>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn close-modal">Cancel</button>
+        </div>
+      </div>
+
+      <div id="export-modal" class="modal hidden">
+        <div class="modal-header">
+          <h3>Export Flowchart</h3>
+          <button class="close-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="export-options">
+            <div class="export-option">
+              <input type="radio" id="export-png" name="export-type" value="png" checked>
+              <label for="export-png">PNG Image</label>
+            </div>
+            <div class="export-option">
+              <input type="radio" id="export-svg" name="export-type" value="svg">
+              <label for="export-svg">SVG Vector</label>
+            </div>
+            <div class="export-option">
+              <input type="radio" id="export-json" name="export-type" value="json">
+              <label for="export-json">JSON Data</label>
+            </div>
+          </div>
+          <div class="export-settings">
+            <label for="export-scale">Scale:</label>
+            <select id="export-scale">
+              <option value="1">1x</option>
+              <option value="2" selected>2x</option>
+              <option value="4">4x</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button id="export-confirm" class="btn btn-primary">Export</button>
+          <button class="btn close-modal">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="toast-container">
+      <div id="toast" class="toast">
+        <span id="toast-message"></span>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="js/app.js"></script>
+  <script src="flowchart.js"></script>
+  <noscript>
+    <div class="noscript-message">
+      <h2>JavaScript Required</h2>
+      <p>This application requires JavaScript to function. Please enable JavaScript in your browser settings.</p>
+    </div>
+  </noscript>
 </body>
 </html>
