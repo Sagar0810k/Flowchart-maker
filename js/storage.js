@@ -1,6 +1,3 @@
-/**
- * StorageManager - Handles saving and loading flowcharts from localStorage
- */
 class StorageManager {
     constructor() {
         // Storage key for the list of saved flowcharts
@@ -160,8 +157,7 @@ class StorageManager {
      * @returns {number} - The maximum storage in bytes
      */
     getMaxStorageAvailable() {
-        // This is a rough estimate since browsers don't expose this information directly
-        // Most browsers allocate 5MB per origin
+        
         return 5 * 1024 * 1024;
     }
 }

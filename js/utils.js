@@ -1,8 +1,4 @@
 /**
- * Utility functions for the FlowCharter application
- */
-
-/**
  * Generates a unique ID with a given prefix
  * @param {string} prefix - The prefix for the ID
  * @returns {string} - A unique ID

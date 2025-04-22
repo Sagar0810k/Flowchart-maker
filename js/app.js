@@ -1,10 +1,3 @@
-/**
- * FlowCharter - Main Application
- * 
- * This is the main entry point that initializes the application
- * and connects all components.
- */
-
 document.addEventListener('DOMContentLoaded', () => {
     // Initialize the canvas manager
     const canvas = document.getElementById('flowchartCanvas');

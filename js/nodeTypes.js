@@ -106,32 +106,52 @@ const NodeTypes = {
         
         // Gets the point where a connection should attach to this node
         getConnectionPoint(node, targetNode) {
-            const halfWidth = node.width / 2;
-            const halfHeight = node.height / 2;
-            
-            // Calculate the angle between centers
-            const dx = targetNode.x - node.x;
-            const dy = targetNode.y - node.y;
-            const angle = Math.atan2(dy, dx);
-            
-            // The diamond has 4 corners to connect to
-            const tanAngle = Math.abs(Math.tan(angle));
-            const tanRatio = halfHeight / halfWidth;
-            
-            let x, y;
-            
-            if (tanAngle < tanRatio) {
-                // Connect to right or left
-                x = dx > 0 ? node.x + halfWidth : node.x - halfWidth;
-                y = node.y + (dy > 0 ? 1 : -1) * halfHeight * (1 - Math.abs(dx) / halfWidth);
-            } else {
-                // Connect to bottom or top
-                y = dy > 0 ? node.y + halfHeight : node.y - halfHeight;
-                x = node.x + (dx > 0 ? 1 : -1) * halfWidth * (1 - Math.abs(dy) / halfHeight);
+            const cx = node.x;
+            const cy = node.y;
+            const hw = node.width / 2;
+            const hh = node.height / 2;
+        
+            const corners = [
+                { x: cx, y: cy - hh },           // Top
+                { x: cx + hw, y: cy },           // Right
+                { x: cx, y: cy + hh },           // Bottom
+                { x: cx - hw, y: cy },           // Left
+            ];
+        
+            const sides = [
+                [corners[0], corners[1]], // Top → Right
+                [corners[1], corners[2]], // Right → Bottom
+                [corners[2], corners[3]], // Bottom → Left
+                [corners[3], corners[0]], // Left → Top
+            ];
+        
+            // Line from center to target
+            const x1 = cx;
+            const y1 = cy;
+            const x2 = targetNode.x;
+            const y2 = targetNode.y;
+        
+            // Find intersection with one of the diamond's edges
+            for (let [p1, p2] of sides) {
+                const denom = (p1.x - p2.x) * (y1 - y2) - (p1.y - p2.y) * (x1 - x2);
+                if (denom === 0) continue; // Parallel lines
+        
+                const t = ((p1.x - x1) * (y1 - y2) - (p1.y - y1) * (x1 - x2)) / denom;
+                const u = -((p1.x - p2.x) * (p1.y - y1) - (p1.y - p2.y) * (p1.x - x1)) / denom;
+        
+                if (t >= 0 && t <= 1 && u >= 0) {
+                    // Valid intersection
+                    return {
+                        x: p1.x + t * (p2.x - p1.x),
+                        y: p1.y + t * (p2.y - p1.y),
+                    };
+                }
             }
-            
-            return { x, y };
-        }
+        
+            // Fallback to center if no intersection found
+            return { x: cx, y: cy };
+        }        
+        
     },
     
     // Input/Output node (parallelogram)

@@ -1,20 +1,9 @@
-/**
- * ValidationEngine - Validates flowcharts and provides feedback
- */
 class ValidationEngine {
     constructor(canvasManager, messagesContainer) {
         this.canvasManager = canvasManager;
         this.messagesContainer = messagesContainer;
         this.messages = [];
     }
-    
-    /**
-     * Validates the current flowchart
-     * Checks for:
-     * - Missing start/end nodes
-     * - Unconnected nodes
-     * - Cycles (if not desired in certain nodes)
-     */
     validateFlowchart() {
         this.clearMessages();
         

@@ -1,6 +1,3 @@
-/**
- * CanvasManager - Handles all canvas operations and rendering
- */
 class CanvasManager {
     constructor(canvas) {
         this.canvas = canvas;
