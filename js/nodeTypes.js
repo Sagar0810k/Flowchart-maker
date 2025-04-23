@@ -1,11 +1,9 @@
 const NodeTypes = {
-    // Start node (oval shape)
     start: {
         color: '#2ecc71',
         defaultWidth: 100,
         defaultHeight: 50,
         
-        // Draws the start node shape
         draw(ctx, x, y, width, height) {
             ctx.beginPath();
             ctx.ellipse(x, y, width / 2, height / 2, 0, 0, Math.PI * 2);
